@@ -90,8 +90,7 @@ That's it! You've successfully installed Nodemon on your Linux machine. Now, you
 This bot supports the following Slash commands:
 
 - `/help`: Get help about the bot and its commands.
-```
-```
+
 
 ## 📄 License <a name = "license"></a>
 This project is licensed under the MIT License - see the LICENSE.md file for details.
