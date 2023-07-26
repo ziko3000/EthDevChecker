@@ -1,0 +1,5 @@
+/node_modules
+
+.env
+
+/src/bot2.ts

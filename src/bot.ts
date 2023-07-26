@@ -15,27 +15,45 @@ interface EtherscanResponse {
   result: any[];
 }
 
+/**
+ * Bot class that extends Client from discord.js
+ * Includes functions to handle commands, check for latest transactions, and update the bot's presence.
+ */
 export class Bot extends Client {
-  private botChannelID: string = '1090929641457467465'; // Replace with your Discord channel ID
   private lastSentTxHash: string | null = null;
   private latestTxValue: string | null = null;
   private latestTxTimestamp: number | null = null;
 
+  /**
+   * Construct a new Bot instance.
+   */
   constructor() {
     super({ intents: [8, 11, 12] });
 
+    
+    /**
+     * Once bot is ready, log to the console and start checking for transactions
+     * and updating bot presence at regular intervals.
+     */
     this.once('ready', async () => {
       console.log(`Logged in as ${this.user?.tag}!`);
       setInterval(() => this.checkLatestTransaction(), 2000); 
       setInterval(() => this.updateBotPresence(), 3000);
     });
 
+     /**
+     * Listen to incoming interactions and handle them if they are commands.
+     */
     this.on('interactionCreate', async (interaction) => {
       if (!interaction.isCommand()) return;
       await this.handleCommand(interaction as CommandInteraction);
     });
   }
 
+    /**
+   * Handle commands received by the bot.
+   * @param {CommandInteraction} interaction - The command interaction.
+   */
   async handleCommand(interaction: CommandInteraction) {
     if (interaction.commandName === 'help') {
       const command = new HelpCommand();
@@ -43,6 +61,10 @@ export class Bot extends Client {
     }
   }
 
+   /**
+   * Check for the latest transaction from the Ethereum Foundation.
+   * If a transaction meets the conditions and is different from the last one, an embed message is sent in all text channels.
+   */
   async checkLatestTransaction() {
     try {
       const address = '0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae';
@@ -103,12 +125,13 @@ export class Bot extends Client {
   )
 
 
-        let channel = this.channels.cache.get(this.botChannelID);
-        if (channel instanceof TextChannel) {
-          channel.send({ embeds: [embedMessage] });
-        } else {
-          console.log('Channel not found');
-        }
+  this.guilds.cache.forEach((guild) => {
+    guild.channels.cache.forEach((channel) => {
+      if (channel instanceof TextChannel) {
+        channel.send({ embeds: [embedMessage] });
+      }
+    });
+  });
       } else {
         console.log('No transactions found for this amount');
       }
@@ -120,7 +143,10 @@ export class Bot extends Client {
       }
     }
   }
-
+ /**
+   * Update the bot's presence on Discord.
+   * If there are no recent transactions, log an error.
+   */
   async updateBotPresence(): Promise<void> {
     try {
       if (this.latestTxValue && this.latestTxTimestamp) {
