@@ -3,7 +3,7 @@ import axios from 'axios';
 import { config as dotenvConfig } from 'dotenv';
 import { Command } from './commands/command.ts';
 import { ethers  } from 'ethers';
-import { HelpCommand } from './commands/help.ts';
+import { HelpCommand } from './commands/help';
 
 dotenvConfig();
 

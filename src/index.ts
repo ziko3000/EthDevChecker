@@ -1,6 +1,6 @@
 import { REST, Routes } from 'discord.js';
-import { Bot } from './bot.ts';
-import { HelpCommand } from './commands/help.ts';
+import { Bot } from './bot';
+import { HelpCommand } from './commands/help';
 
 const clientId = process.env.CLIENT_ID as string;
 const botToken = process.env.DISCORD_BOT_TOKEN as string;
